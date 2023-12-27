@@ -18,3 +18,12 @@ export const Thumbnail = styled(Image)`
   width: 100%;
   height: 100%;
 `;
+
+export const FavButton = styled(Pressable)`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: ${pixelSizeVertical(5)}px;
+  background-color: ${({theme}) => theme.colors.dark[10]};
+  border-radius: 99px;
+`;

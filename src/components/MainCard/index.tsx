@@ -5,12 +5,14 @@ import Separator from '../Separator';
 import {TextBold, TextMedium, TextSemiBold} from '../Typography';
 import {images} from '../../../assets/images';
 import {IMainCardProps} from './types';
-import {ImageWrapper, MainWrapper, Thumbnail} from './styles';
+import {FavButton, ImageWrapper, MainWrapper, Thumbnail} from './styles';
+import {icons} from '../../../assets/icons';
 
 const MainCard = (props: IMainCardProps) => {
   const {imageUrl, index, item} = props;
   const {colors} = useTheme();
   const {NoImage} = images;
+  const {FavIcon} = icons;
 
   const dateToShow = ({
     startDate,
@@ -34,6 +36,9 @@ const MainCard = (props: IMainCardProps) => {
         ) : (
           <Thumbnail source={NoImage} />
         )}
+        <FavButton>
+          <FavIcon width={20} height={20} fill={colors.white} />
+        </FavButton>
       </ImageWrapper>
       <Separator size={10} />
       <TextBold fontSize={18} style={{textTransform: 'capitalize'}}>
