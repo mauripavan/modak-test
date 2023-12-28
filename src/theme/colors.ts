@@ -9,7 +9,7 @@ export const colors = {
   },
   dark: {
     0: '#333333',
-    10: 'rgba(0, 0, 0, 0.5)',
+    10: 'rgba(0, 0, 0, 0.6)',
   },
   neutral: {
     0: '#CDD4D9',
@@ -27,6 +27,7 @@ export const colors = {
   },
   gray: {
     0: '#F5F5F5',
+    10: '#858585',
   },
   blue: {
     0: '#1877F2',

@@ -11,3 +11,14 @@ export const getArtWorks = async () => {
     console.error(error);
   }
 };
+
+export const getSingleArtWork = async ({id}: {id: number}) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/artworks/${id}?fields=id,title,artist_title,date_start,date_end,image_id,short_description,date_display,dimensions,medium_display,place_of_origin,credit_line`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

@@ -28,8 +28,8 @@ const HomeScreen = () => {
     getArtWorks().then(response => {
       setArtWorks(response.data);
       setBaseIIF(response.config.iiif_url);
+      setLoading(false);
     });
-    setLoading(false);
   }, []);
 
   const renderArtItems = ({
@@ -41,7 +41,7 @@ const HomeScreen = () => {
   }) => {
     const imageUrl = `${baseIIIF}/${item.image_id}/full/400,/0/default.jpg`;
     const handleItemPress = (itemId: number) => {
-      navigation.navigate('SingleItemScreen', {itemId});
+      navigation.navigate('SingleItemScreen', {itemId, baseIIIF});
     };
     return (
       <MainCard
