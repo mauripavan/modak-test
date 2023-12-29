@@ -1,6 +1,6 @@
 import {atom} from 'recoil';
 
-export const favouritesState = atom({
+export const favouritesState = atom<number[]>({
   key: 'FavouritesState',
-  default: '',
+  default: [],
 });

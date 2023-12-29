@@ -3,6 +3,7 @@ import {useTheme} from 'styled-components';
 import {FlatList, SafeAreaView} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
+import {useRecoilState} from 'recoil';
 
 import {getArtWorks} from '../../utils/api';
 import Separator from '../../components/Separator';
@@ -11,6 +12,7 @@ import MainCard from '../../components/MainCard';
 import {IArtWorkProps} from './types';
 import Loading from '../../components/Loading';
 import {LoadingSize} from '../../components/Loading/types';
+import {favouritesState} from '../../store/app-state';
 
 export type HomeScreenParamList = {
   HomeScreen: {itemId: number} | undefined;
@@ -22,6 +24,7 @@ const HomeScreen = () => {
   const [baseIIIF, setBaseIIF] = useState('');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const [, setGlobalFav] = useRecoilState(favouritesState);
 
   useEffect(() => {
     setLoading(true);
@@ -43,12 +46,23 @@ const HomeScreen = () => {
     const handleItemPress = (itemId: number) => {
       navigation.navigate('SingleItemScreen', {itemId, baseIIIF});
     };
+    const handleFavouritePress = (itemId: number) => {
+      setGlobalFav(prev => {
+        if (prev.includes(itemId)) {
+          return prev.filter(item => item !== itemId);
+        } else {
+          return [...prev, itemId];
+        }
+      });
+    };
+
     return (
       <MainCard
         item={item}
         index={index}
         imageUrl={imageUrl}
         onPress={() => handleItemPress(item.id)}
+        onFavouritePress={() => handleFavouritePress(item.id)}
       />
     );
   };
@@ -58,7 +72,7 @@ const HomeScreen = () => {
   }
 
   return (
-    <SafeAreaView style={{backgroundColor: colors.white}}>
+    <SafeAreaView style={{backgroundColor: colors.white, flex: 1}}>
       <FlatList
         data={artWorks}
         renderItem={renderArtItems}

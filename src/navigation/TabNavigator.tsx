@@ -30,7 +30,6 @@ const TabNavigator = () => {
               fill={focused ? colors.white : colors.gray[10]}
               width={30}
               height={30}
-              strokeWidth={1}
             />
           ),
           tabBarActiveTintColor: colors.white,
@@ -45,10 +44,11 @@ const TabNavigator = () => {
           headerShown: false,
           tabBarIcon: ({focused}) => (
             <FavIcon
-              fill={focused ? colors.white : colors.gray[10]}
+              fill={'transparent'}
+              stroke={focused ? colors.white : colors.gray[10]}
               width={30}
               height={30}
-              strokeWidth={1}
+              strokeWidth={2}
             />
           ),
           tabBarActiveTintColor: colors.white,
