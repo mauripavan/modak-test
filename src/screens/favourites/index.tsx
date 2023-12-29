@@ -13,7 +13,7 @@ import {pixelSizeHorizontal, pixelSizeVertical} from '../../utils/metrics';
 import Loading from '../../components/Loading';
 import {LoadingSize} from '../../components/Loading/types';
 import FavouriteCard from '../../components/FavouriteCard';
-
+import EmptyComponent from '../../components/EmptyComponent';
 
 const FavouritesScreen = () => {
   const {colors} = useTheme();
@@ -63,6 +63,16 @@ const FavouritesScreen = () => {
 
   if (loading) {
     return <Loading size={LoadingSize.LARGE} color={colors.green[0]} />;
+  }
+
+  if (!favourite[0]) {
+    return (
+      <EmptyComponent
+        title={'No Favourites Yet'}
+        subtitle={`Start saving your favourites art pieces by clicking on the heart icon on
+    the right corner of each art work.`}
+      />
+    );
   }
 
   return (
