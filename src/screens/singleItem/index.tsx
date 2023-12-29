@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {ScrollView} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTheme} from 'styled-components';
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 
 import {getSingleArtWork} from '../../utils/api';
 import {IArtWorkProps} from '../home/types';
@@ -45,6 +46,7 @@ const SingleItemScreen = () => {
   const [artWork, setArtWork] = useState<IArtWorkProps>(defaultArtWork);
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const tabBarHeight = useBottomTabBarHeight();
 
   useEffect(() => {
     setLoading(true);
@@ -86,7 +88,7 @@ const SingleItemScreen = () => {
           )}
         </ImageWrapper>
         <Separator size={20} />
-        <InfoContainer>
+        <InfoContainer paddingBottom={tabBarHeight}>
           <InfoSubContainer>
             <TextBold color={colors.dark[0]} fontSize={22}>
               {artWork.title}

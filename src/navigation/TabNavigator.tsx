@@ -2,9 +2,9 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTheme} from 'styled-components';
 
-import HomeScreen from '../screens/home';
-import FavouritesScreen from '../screens/favourites';
 import {icons} from '../../assets/icons';
+import HomeNavigation from './HomeNavigator';
+import FavouritesNavigation from './FavouritesNavigator';
 
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -22,7 +22,7 @@ const TabNavigator = () => {
       }}>
       <Tab.Screen
         name='Home'
-        component={HomeScreen}
+        component={HomeNavigation}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
@@ -40,7 +40,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name='Favourites'
-        component={FavouritesScreen}
+        component={FavouritesNavigation}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
