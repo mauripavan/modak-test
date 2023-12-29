@@ -13,6 +13,7 @@ import {IArtWorkProps} from './types';
 import Loading from '../../components/Loading';
 import {LoadingSize} from '../../components/Loading/types';
 import {favouritesState} from '../../store/app-state';
+import {getArray, updateArray} from '../../utils/functions';
 
 export type HomeScreenParamList = {
   HomeScreen: {itemId: number} | undefined;
@@ -35,6 +36,12 @@ const HomeScreen = () => {
     });
   }, []);
 
+  useEffect(() => {
+    getArray('favourites').then(response => {
+      if (response !== null) setGlobalFav(response);
+    });
+  }, []);
+
   const renderArtItems = ({
     item,
     index,
@@ -47,6 +54,7 @@ const HomeScreen = () => {
       navigation.navigate('SingleItemScreen', {itemId, baseIIIF});
     };
     const handleFavouritePress = (itemId: number) => {
+      updateArray('favourites', itemId);
       setGlobalFav(prev => {
         if (prev.includes(itemId)) {
           return prev.filter(item => item !== itemId);

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTheme} from 'styled-components';
 
 import Separator from '../Separator';
@@ -7,7 +7,7 @@ import {images} from '../../../assets/images';
 import {IMainCardProps} from './types';
 import {FavButton, ImageWrapper, MainWrapper, Thumbnail} from './styles';
 import {icons} from '../../../assets/icons';
-import {dateToShow} from '../../utils/functions';
+import {dateToShow, getArray} from '../../utils/functions';
 
 const MainCard = (props: IMainCardProps) => {
   const {imageUrl, index, item, onPress, onFavouritePress} = props;
@@ -15,6 +15,15 @@ const MainCard = (props: IMainCardProps) => {
   const {NoImage} = images;
   const {FavIcon} = icons;
   const [favourites, setFavourites] = useState(false);
+
+  useEffect(() => {
+    getArray('favourites').then(response => {
+      const isFav = response?.includes(item.id);
+      if (isFav) {
+        setFavourites(true);
+      }
+    });
+  }, []);
 
   const handleFavouritePress = () => {
     setFavourites(!favourites);
