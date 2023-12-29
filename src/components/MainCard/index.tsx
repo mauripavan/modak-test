@@ -9,7 +9,7 @@ import {FavButton, ImageWrapper, MainWrapper, Thumbnail} from './styles';
 import {icons} from '../../../assets/icons';
 
 const MainCard = (props: IMainCardProps) => {
-  const {imageUrl, index, item} = props;
+  const {imageUrl, index, item, onPress} = props;
   const {colors} = useTheme();
   const {NoImage} = images;
   const {FavIcon} = icons;
@@ -29,7 +29,7 @@ const MainCard = (props: IMainCardProps) => {
   };
 
   return (
-    <MainWrapper key={`aw-${index}`}>
+    <MainWrapper key={`aw-${index}`} onPress={onPress}>
       <ImageWrapper>
         {item.image_id ? (
           <Thumbnail source={{uri: imageUrl}} />
