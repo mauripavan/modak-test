@@ -10,6 +10,7 @@ export const colors = {
   dark: {
     0: '#333333',
     10: 'rgba(0, 0, 0, 0.6)',
+    20: 'rgba(0, 0, 0, 0.9)',
   },
   neutral: {
     0: '#CDD4D9',
