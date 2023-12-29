@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTheme} from 'styled-components';
 
 import Separator from '../Separator';
@@ -7,25 +7,27 @@ import {images} from '../../../assets/images';
 import {IMainCardProps} from './types';
 import {FavButton, ImageWrapper, MainWrapper, Thumbnail} from './styles';
 import {icons} from '../../../assets/icons';
+import {dateToShow, getArray} from '../../utils/functions';
 
 const MainCard = (props: IMainCardProps) => {
-  const {imageUrl, index, item, onPress} = props;
+  const {imageUrl, index, item, onPress, onFavouritePress} = props;
   const {colors} = useTheme();
   const {NoImage} = images;
   const {FavIcon} = icons;
+  const [favourites, setFavourites] = useState(false);
 
-  const dateToShow = ({
-    startDate,
-    endDate,
-  }: {
-    startDate: number;
-    endDate: number;
-  }) => {
-    if (startDate === endDate) return endDate;
-    else {
-      const date = `${startDate} to ${endDate}`;
-      return date;
-    }
+  useEffect(() => {
+    getArray('favourites').then(response => {
+      const isFav = response?.includes(item.id);
+      if (isFav) {
+        setFavourites(true);
+      }
+    });
+  }, []);
+
+  const handleFavouritePress = () => {
+    setFavourites(!favourites);
+    onFavouritePress();
   };
 
   return (
@@ -36,8 +38,14 @@ const MainCard = (props: IMainCardProps) => {
         ) : (
           <Thumbnail source={NoImage} />
         )}
-        <FavButton>
-          <FavIcon width={20} height={20} fill={colors.white} />
+        <FavButton onPress={handleFavouritePress}>
+          <FavIcon
+            width={20}
+            height={20}
+            fill={favourites ? colors.red[20] : 'transparent'}
+            stroke={favourites ? colors.red[20] : colors.white}
+            strokeWidth={2}
+          />
         </FavButton>
       </ImageWrapper>
       <Separator size={10} />

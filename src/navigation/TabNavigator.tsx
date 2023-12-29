@@ -2,9 +2,9 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTheme} from 'styled-components';
 
-import HomeScreen from '../screens/home';
-import FavouritesScreen from '../screens/favourites';
 import {icons} from '../../assets/icons';
+import HomeNavigation from './HomeNavigator';
+import FavouritesNavigation from './FavouritesNavigator';
 
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -22,7 +22,7 @@ const TabNavigator = () => {
       }}>
       <Tab.Screen
         name='Home'
-        component={HomeScreen}
+        component={HomeNavigation}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
@@ -30,7 +30,6 @@ const TabNavigator = () => {
               fill={focused ? colors.white : colors.gray[10]}
               width={30}
               height={30}
-              strokeWidth={1}
             />
           ),
           tabBarActiveTintColor: colors.white,
@@ -40,15 +39,16 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name='Favourites'
-        component={FavouritesScreen}
+        component={FavouritesNavigation}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
             <FavIcon
-              fill={focused ? colors.white : colors.gray[10]}
+              fill={'transparent'}
+              stroke={focused ? colors.white : colors.gray[10]}
               width={30}
               height={30}
-              strokeWidth={1}
+              strokeWidth={2}
             />
           ),
           tabBarActiveTintColor: colors.white,

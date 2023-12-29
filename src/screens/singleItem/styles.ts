@@ -7,6 +7,7 @@ import {
   widthPixel,
   pixelSizeVertical,
 } from '../../utils/metrics';
+import {IInfoContainerProps} from './types';
 
 export const ImageWrapper = styled(View)`
   width: 100%;
@@ -17,8 +18,9 @@ export const Thumbnail = styled(Image)`
   height: 100%;
 `;
 
-export const InfoContainer = styled(View)`
+export const InfoContainer = styled(View)<IInfoContainerProps>`
   padding-horizontal: ${pixelSizeHorizontal(16)}px;
+  padding-bottom: ${({paddingBottom}) => paddingBottom}px;
 `;
 
 export const InfoSubContainer = styled(View)`
