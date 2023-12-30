@@ -55,7 +55,7 @@ const MainCard = (props: IMainCardProps) => {
       <Separator size={5} />
       <TextSemiBold fontSize={16}>{item.artist_title}</TextSemiBold>
       <Separator size={5} />
-      <TextMedium color={colors.dark[0]}>
+      <TextMedium color={colors.dark[0]} fontSize={16}>
         {dateToShow({startDate: item.date_start, endDate: item.date_end})}
       </TextMedium>
     </MainWrapper>
