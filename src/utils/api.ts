@@ -1,10 +1,10 @@
 import axios from 'axios';
 const BASE_URL = 'https://api.artic.edu/api/v1';
 
-export const getArtWorks = async () => {
+export const getArtWorks = async (page: number) => {
   try {
     const response = await axios.get(
-      `${BASE_URL}/artworks?fields=id,title,artist_title,date_start,date_end,image_id`
+      `${BASE_URL}/artworks?page=${page}&fields=id,title,artist_title,date_start,date_end,image_id`
     );
     return response.data;
   } catch (error) {

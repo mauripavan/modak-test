@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useTheme} from 'styled-components';
-import {FlatList, SafeAreaView} from 'react-native';
+import {ActivityIndicator, FlatList, SafeAreaView} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
@@ -24,23 +24,39 @@ const HomeScreen = () => {
   const [artWorks, setArtWorks] = useState<Array<IArtWorkProps>>([]);
   const [baseIIIF, setBaseIIF] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const [, setGlobalFav] = useRecoilState(favouritesState);
+  const [nextUrl, setNextUrl] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [initialRender, setInitialRender] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   useEffect(() => {
     setLoading(true);
-    getArtWorks().then(response => {
-      setArtWorks(response.data);
-      setBaseIIF(response.config.iiif_url);
-      setLoading(false);
-    });
-  }, []);
+    getArtWorks(currentPage)
+      .then(response => {
+        setArtWorks(prev => [...prev, ...response.data]);
+        setBaseIIF(response.config.iiif_url);
+        setNextUrl(response.pagination.next_url);
+      })
+      .finally(() => {
+        setLoading(false);
+        setIsFetching(false);
+        setInitialRender(false);
+      });
+  }, [currentPage]);
 
   useEffect(() => {
     getArray('favourites').then(response => {
       if (response !== null) setGlobalFav(response);
     });
   }, []);
+
+  const handleEndReached = () => {
+    if (isFetching) return;
+    setIsFetching(true);
+    setCurrentPage(prev => prev + 1);
+  };
 
   const renderArtItems = ({
     item,
@@ -66,8 +82,8 @@ const HomeScreen = () => {
 
     return (
       <MainCard
+        key={`aw-${index}-${item.id}`}
         item={item}
-        index={index}
         imageUrl={imageUrl}
         onPress={() => handleItemPress(item.id)}
         onFavouritePress={() => handleFavouritePress(item.id)}
@@ -75,7 +91,7 @@ const HomeScreen = () => {
     );
   };
 
-  if (loading) {
+  if (loading && initialRender) {
     return <Loading size={LoadingSize.LARGE} color={colors.green[0]} />;
   }
 
@@ -90,8 +106,24 @@ const HomeScreen = () => {
           paddingBottom: pixelSizeVertical(50),
           backgroundColor: colors.white,
         }}
+        keyExtractor={(item, index) => `aw-${index}-${item.id}`}
         ItemSeparatorComponent={() => <Separator size={20} />}
         showsVerticalScrollIndicator={false}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={() => {
+          return (
+            loading &&
+            !initialRender &&
+            nextUrl && (
+              <ActivityIndicator
+                size={'small'}
+                color={colors.green[0]}
+                style={{paddingTop: pixelSizeVertical(10)}}
+              />
+            )
+          );
+        }}
       />
     </SafeAreaView>
   );

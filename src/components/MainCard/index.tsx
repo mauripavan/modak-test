@@ -10,7 +10,7 @@ import {icons} from '../../../assets/icons';
 import {dateToShow, getArray} from '../../utils/functions';
 
 const MainCard = (props: IMainCardProps) => {
-  const {imageUrl, index, item, onPress, onFavouritePress} = props;
+  const {imageUrl, item, onPress, onFavouritePress} = props;
   const {colors} = useTheme();
   const {NoImage} = images;
   const {FavIcon} = icons;
@@ -31,7 +31,7 @@ const MainCard = (props: IMainCardProps) => {
   };
 
   return (
-    <MainWrapper key={`aw-${index}`} onPress={onPress}>
+    <MainWrapper onPress={onPress}>
       <ImageWrapper>
         {item.image_id ? (
           <Thumbnail source={{uri: imageUrl}} />
