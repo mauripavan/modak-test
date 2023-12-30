@@ -1,6 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {useTheme} from 'styled-components';
-import {ActivityIndicator, FlatList, SafeAreaView} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  SafeAreaView,
+} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
@@ -29,9 +34,10 @@ const HomeScreen = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [initialRender, setInitialRender] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
+  const [refreshing, setRefreshing] = useState(true);
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-  useEffect(() => {
+  const fetchArtWorks = () => {
     setLoading(true);
     getArtWorks(currentPage)
       .then(response => {
@@ -42,8 +48,26 @@ const HomeScreen = () => {
       .finally(() => {
         setLoading(false);
         setIsFetching(false);
+        setRefreshing(false);
         setInitialRender(false);
       });
+  };
+
+  const refreshScreen = () => {
+    getArtWorks(1)
+      .then(response => {
+        setArtWorks(response.data);
+        setBaseIIF(response.config.iiif_url);
+        setNextUrl(response.pagination.next_url);
+        setCurrentPage(1);
+      })
+      .finally(() => {
+        setRefreshing(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchArtWorks();
   }, [currentPage]);
 
   useEffect(() => {
@@ -111,6 +135,9 @@ const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refreshScreen} />
+        }
         ListFooterComponent={() => {
           return (
             loading &&
