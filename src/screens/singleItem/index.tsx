@@ -62,7 +62,7 @@ const SingleItemScreen = () => {
   const removePTags = (text: string | null) => {
     if (text === null) return;
     text = text.replace(/^<p>/, '');
-    text = text.replace(/<\/p>$/, '');
+    text = text.replace(/<\/p>\s*$/, '');
     return text;
   };
 
