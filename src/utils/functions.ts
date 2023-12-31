@@ -14,6 +14,12 @@ export const dateToShow = ({
   }
 };
 
+export const removeHTMLTags = (text: string | null) => {
+  if (text === null) return;
+  text = text.replace(/<[^>]*>/g, '');
+  return text;
+};
+
 export const storeArray = async (key: string, array: number[]) => {
   try {
     const jsonValue = JSON.stringify(array);

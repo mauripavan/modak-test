@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useRecoilState} from 'recoil';
 import {Pressable} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
 
 import Separator from '../Separator';
 import {TextBold, TextMedium, TextSemiBold} from '../Typography';
@@ -23,7 +24,6 @@ import {
 } from '../../utils/functions';
 import {favouritesState} from '../../store/app-state';
 
-
 const MainCard = (props: IMainCardProps) => {
   const {imageUrl, item, onPress, onFavouritePress} = props;
   const {colors} = useTheme();
@@ -31,6 +31,7 @@ const MainCard = (props: IMainCardProps) => {
   const {FavIcon} = icons;
   const [favourites, setFavourites] = useState(false);
   const [, setGlobalFav] = useRecoilState(favouritesState);
+  const isFocus = useIsFocused();
 
   const doubleTapRef = useRef();
   const scale = useSharedValue(0);
@@ -38,14 +39,20 @@ const MainCard = (props: IMainCardProps) => {
     transform: [{scale: Math.max(scale.value, 0)}],
   }));
 
-  useEffect(() => {
+  const updateLikedState = () => {
     getArray('favourites').then(response => {
       const isFav = response?.includes(item.id);
       if (isFav) {
         setFavourites(true);
+      } else {
+        setFavourites(false);
       }
     });
-  }, []);
+  };
+
+  useEffect(() => {
+    updateLikedState();
+  }, [isFocus]);
 
   const handleFavouritePress = () => {
     setFavourites(!favourites);
