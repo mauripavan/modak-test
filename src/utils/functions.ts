@@ -47,3 +47,19 @@ export const updateArray = async (key: string, numberToCheck: number) => {
     console.error('Error updating array in AsyncStorage:', error);
   }
 };
+
+export const updateArrayWithDoubleTap = async (
+  key: string,
+  numberToCheck: number
+) => {
+  try {
+    const currentArray = (await getArray(key)) || [];
+    const isNumberInArray = currentArray.includes(numberToCheck);
+    if (!isNumberInArray) {
+      currentArray.push(numberToCheck);
+    }
+    await storeArray(key, currentArray);
+  } catch (error) {
+    console.error('Error updating array in AsyncStorage:', error);
+  }
+};
