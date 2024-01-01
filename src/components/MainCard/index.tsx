@@ -90,13 +90,10 @@ const MainCard = (props: IMainCardProps) => {
                   {
                     width: '100%',
                     height: '100%',
-                    shadowOffset: {width: 0, height: 20},
-                    shadowOpacity: 0.3,
-                    shadowRadius: 35,
                   },
                   rStyle,
                 ]}
-                resizeMode='center'
+                resizeMode='contain'
               />
             </Thumbnail>
           </Animated.View>
