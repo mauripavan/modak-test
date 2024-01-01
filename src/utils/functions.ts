@@ -14,6 +14,12 @@ export const dateToShow = ({
   }
 };
 
+export const removeHTMLTags = (text: string | null) => {
+  if (text === null) return;
+  text = text.replace(/<[^>]*>/g, '');
+  return text;
+};
+
 export const storeArray = async (key: string, array: number[]) => {
   try {
     const jsonValue = JSON.stringify(array);
@@ -40,6 +46,22 @@ export const updateArray = async (key: string, numberToCheck: number) => {
     if (isNumberInArray) {
       currentArray = currentArray.filter(num => num !== numberToCheck);
     } else {
+      currentArray.push(numberToCheck);
+    }
+    await storeArray(key, currentArray);
+  } catch (error) {
+    console.error('Error updating array in AsyncStorage:', error);
+  }
+};
+
+export const updateArrayWithDoubleTap = async (
+  key: string,
+  numberToCheck: number
+) => {
+  try {
+    const currentArray = (await getArray(key)) || [];
+    const isNumberInArray = currentArray.includes(numberToCheck);
+    if (!isNumberInArray) {
       currentArray.push(numberToCheck);
     }
     await storeArray(key, currentArray);

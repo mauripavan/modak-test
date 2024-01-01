@@ -3,6 +3,7 @@ import {ScrollView} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTheme} from 'styled-components';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import {useRecoilState} from 'recoil';
 
 import {getSingleArtWork} from '../../utils/api';
 import {IArtWorkProps} from '../home/types';
@@ -17,9 +18,12 @@ import {
   InfoContainer,
   InfoSubContainer,
   BackButton,
+  FavButton,
 } from './styles';
 import {icons} from '../../../assets/icons';
 import RowInfoCard from '../../components/RowInfoCard';
+import {getArray, removeHTMLTags, updateArray} from '../../utils/functions';
+import {favouritesState} from '../../store/app-state';
 
 const defaultArtWork: IArtWorkProps = {
   id: 0,
@@ -41,11 +45,13 @@ const SingleItemScreen = () => {
   const {colors} = useTheme();
   const navigation = useNavigation();
   const {NoImage} = images;
-  const {BackIcon} = icons;
+  const {BackIcon, FavIcon} = icons;
   const {itemId, baseIIIF} = route.params as {itemId: number; baseIIIF: string};
   const [artWork, setArtWork] = useState<IArtWorkProps>(defaultArtWork);
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [favourite, setFavourite] = useState(false);
+  const [, setGlobalFav] = useRecoilState(favouritesState);
   const tabBarHeight = useBottomTabBarHeight();
 
   useEffect(() => {
@@ -59,15 +65,29 @@ const SingleItemScreen = () => {
     });
   }, []);
 
-  const removePTags = (text: string | null) => {
-    if (text === null) return;
-    text = text.replace(/^<p>/, '');
-    text = text.replace(/<\/p>\s*$/, '');
-    return text;
-  };
+  useEffect(() => {
+    getArray('favourites').then(response => {
+      const isFav = response?.includes(itemId);
+      if (isFav) {
+        setFavourite(true);
+      }
+    });
+  }, []);
 
   const handleBackPress = () => {
     navigation.goBack();
+  };
+
+  const handleFavouritePress = () => {
+    setFavourite(!favourite);
+    updateArray('favourites', itemId);
+    setGlobalFav(prev => {
+      if (prev.includes(itemId)) {
+        return prev.filter(item => item !== itemId);
+      } else {
+        return [...prev, itemId];
+      }
+    });
   };
 
   if (loading) {
@@ -76,16 +96,22 @@ const SingleItemScreen = () => {
 
   return (
     <>
-      <BackButton onPress={handleBackPress}>
-        <BackIcon width={20} height={20} fill={colors.white} />
-      </BackButton>
       <ScrollView>
         <ImageWrapper>
-          {artWork.image_id ? (
-            <Thumbnail source={{uri: imageUrl}} />
-          ) : (
-            <Thumbnail source={NoImage} />
-          )}
+          <Thumbnail source={!artWork.image_id ? NoImage : {uri: imageUrl}} />
+          <BackButton onPress={handleBackPress}>
+            <BackIcon width={20} height={20} fill={colors.white} />
+          </BackButton>
+
+          <FavButton onPress={handleFavouritePress}>
+            <FavIcon
+              width={20}
+              height={20}
+              fill={favourite ? colors.red[20] : 'transparent'}
+              stroke={favourite ? colors.red[20] : colors.white}
+              strokeWidth={1.5}
+            />
+          </FavButton>
         </ImageWrapper>
         <Separator size={20} />
         <InfoContainer paddingBottom={tabBarHeight}>
@@ -107,7 +133,7 @@ const SingleItemScreen = () => {
             <Separator size={10} />
             {artWork.description && (
               <TextSemiBold color={colors.dark[0]} fontSize={14}>
-                {removePTags(artWork.description)}
+                {removeHTMLTags(artWork.description)}
               </TextSemiBold>
             )}
             <Separator size={10} />
